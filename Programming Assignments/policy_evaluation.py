@@ -10,6 +10,7 @@ def state_action_value(s, a, action_prob, discount_factor, v, V):
 
     return v
 
+# Taken from policy_evaluation.py
 def policy_eval(policy, env, discount_factor=1.0, theta=0.00001):
     """
     Evaluate a policy given an environment and a full description of the environment's dynamics
@@ -38,7 +39,10 @@ def policy_eval(policy, env, discount_factor=1.0, theta=0.00001):
             v = 0
             # Look at the possible next actions
             for a, action_prob in enumerate(policy[s]):
-                v = state_action_value(s, a, action_prob, discount_factor, v, V)
+                # For each action, look at the possible next states
+                for  prob, next_state, reward, done in env.P[s][a]:
+                    # Calculate the expected value
+                    v += action_prob * prob * (reward + discount_factor * V[next_state])
 
             # How much the value function changed
             # Max over all states
@@ -48,7 +52,6 @@ def policy_eval(policy, env, discount_factor=1.0, theta=0.00001):
         # Stop evaluation once the value function change
         # is less than theta for all states
         if delta < theta:
-            print(delta, theta)
             break
 
     return np.array(V)
