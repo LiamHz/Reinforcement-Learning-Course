@@ -31,7 +31,7 @@ def mc_prediction(policy, env, num_episodes, discount_factor=1.0):
     """
 
     # Keep track of sum and count of returns for each state
-    # to calculate an average. An attay could be used to save all
+    # to calculate an average. An array could be used to save all
     # returns (like in the textbook) but that's memory inefficient
     returns_sum = defaultdict(float)
     returns_count = defaultdict(float)
