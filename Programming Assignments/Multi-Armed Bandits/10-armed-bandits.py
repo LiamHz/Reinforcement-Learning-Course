@@ -50,17 +50,15 @@ k = 10
 iterations = 1000
 epochs = 2000
 
-# Create one slot machine for each epoch
+# Create one slot machine and one agent for each epoch
 slots = [SlotMachine(k) for i in range(epochs)]
-agent_e_greedy = Agent(k, 0.1)
-
-# print(agent_e_greedy.action_values)
+agents = [Agent(k, 0.1) for i in range(epochs)]
 
 rewards = np.zeros((epochs, iterations))
 for e in range(epochs):
     print("Epoch #", e, "/", epochs)
     for i in range(iterations):
-        agent_action = agent_e_greedy.take_action()
+        agent_action = agents[e].take_action()
 
         # Get reward from taking e-greedy action
         reward = slots[e].take_action(agent_action)
@@ -68,7 +66,7 @@ for e in range(epochs):
         rewards[e, i] = reward
 
         # Update agent's Q-value estimate
-        agent_e_greedy.change_action_value(agent_action, reward)
+        agents[e].change_action_value(agent_action, reward)
 
 # Caluculate average reward at iteration i over epochs
 # Take mean of column
@@ -78,6 +76,8 @@ rewards = np.mean(rewards, axis=0)
 plt.plot(rewards, label="Rewards")
 # plt.plot(validation_losses, label="Test loss")
 plt.legend(frameon=False)
+
+plt.yticks(np.arange(0, 1.51, step=0.5))
 
 # Axis labels
 plt.ylabel("Reward")
